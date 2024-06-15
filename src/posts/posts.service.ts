@@ -66,6 +66,33 @@ export class PostsService {
   }
 
   async paginatePosts(dto: PaginatePostDto) {
+    if (dto.page) {
+      return this.pagePaginatePost(dto)
+    } else {
+      return this.cursorPaginatePosts(dto)
+    }
+  }
+  async pagePaginatePost(dto: PaginatePostDto) {
+    /**
+     * data:Data[]
+     * total : number
+     * [1] [2][3][4]...
+     */
+    // total은 전체 post의 갯수
+    const [posts, count] = await this.postRepository.findAndCount({
+      order: {
+        createdAt: dto.order__createdAt
+      },
+      take: dto.take,
+      skip: dto.take * (dto.page - 1)
+    })
+    return {
+      data: posts,
+      total: count
+    }
+  }
+
+  async cursorPaginatePosts(dto: PaginatePostDto) {
     const where: FindOptionsWhere<PostModel> = {}
     if (dto.where__id_less_than) {
       where.id = LessThan(dto.where__id_less_than)

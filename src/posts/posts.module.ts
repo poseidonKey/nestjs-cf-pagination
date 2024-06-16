@@ -1,3 +1,4 @@
+import { CommonModule } from './../common/common.module'
 import { Module, forwardRef } from '@nestjs/common'
 import { PostsService } from './posts.service'
 import { PostsController } from './posts.controller'
@@ -8,7 +9,7 @@ import { AccessTokenGuard, RefreshTokenGuard } from 'src/auth/guard/bearer-token
 import { UsersModule } from 'src/users/users.module'
 
 @Module({
-  imports: [TypeOrmModule.forFeature([PostModel]), forwardRef(() => AuthModule), UsersModule],
+  imports: [TypeOrmModule.forFeature([PostModel]), forwardRef(() => AuthModule), UsersModule, CommonModule],
   controllers: [PostsController],
   providers: [PostsService, AccessTokenGuard, RefreshTokenGuard]
 })
